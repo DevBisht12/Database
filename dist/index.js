@@ -29,4 +29,39 @@ const createUsersTable = () => __awaiter(void 0, void 0, void 0, function* () {
     )`);
     console.log(result);
 });
-createUsersTable();
+const insetData = (username, email, password) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield client.connect();
+        const insertQuery = "INSERT INTO users (username,email,password)";
+        const values = [username, email, password];
+        const res = yield client.query(insertQuery, values);
+        console.log(res);
+    }
+    catch (error) {
+        console.log('Error during the insertion', error);
+    }
+    finally {
+        yield client.end();
+    }
+});
+insetData('john', 'john@example.com', '123');
+const getData = (email) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        yield client.connect();
+        const query = 'SELECT * FROM users WHERE email =$1';
+        const result = yield client.query(query, [email]);
+        if (result.rows.length > 0) {
+            console.log(result.rows[0]);
+        }
+        else {
+            console.log('No user found');
+        }
+    }
+    catch (error) {
+        console.log('Error during the query', error);
+    }
+    finally {
+        yield client.end();
+    }
+});
+// getData('john@example.com')
